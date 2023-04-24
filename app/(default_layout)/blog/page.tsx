@@ -9,7 +9,15 @@ export const metadata = {
 const WP_REST_BASE = process.env.WP_REST_BASE;
 
 export default async function BlogPage() {
-  const response = await fetch(`${WP_REST_BASE}/posts`);
+  const response = await fetch(`${WP_REST_BASE}/posts`, {
+    next: {
+      /* Anzahl an Sekunden, die die Antwort im Cache bleiben soll.
+      Achtung: Die erste Anfrage nach dieser Zeit erhält noch den
+      gespeicherten Wert, gleichzeit wird dann ein neuen Wert
+      geladen, der beim folgenden Aufruf verwendet wird. */
+      revalidate: 10,
+    },
+  });
 
   const posts = (await response.json()) as BlogPostRest[];
 
