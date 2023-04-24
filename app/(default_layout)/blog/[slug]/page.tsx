@@ -50,7 +50,11 @@ export default async function BlogPostPage({ params: { slug } }: Props) {
 }
 
 async function getPostData(slug: string) {
-  const response = await fetch(`${WP_REST_BASE}/posts?slug=${slug}`);
+  const response = await fetch(`${WP_REST_BASE}/posts?slug=${slug}`, {
+    next: {
+      revalidate: 600,
+    },
+  });
 
   const posts = (await response.json()) as BlogPostRest[];
 
@@ -69,7 +73,11 @@ async function getImageData(imageId: number) {
     return null;
   }
 
-  const response = await fetch(`${WP_REST_BASE}/media/${imageId}`);
+  const response = await fetch(`${WP_REST_BASE}/media/${imageId}`, {
+    next: {
+      revalidate: 600,
+    },
+  });
 
   if (response.status === 404) {
     return null;

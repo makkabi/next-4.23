@@ -15,7 +15,7 @@ export default async function BlogPage() {
       Achtung: Die erste Anfrage nach dieser Zeit erhält noch den
       gespeicherten Wert, gleichzeit wird dann ein neuen Wert
       geladen, der beim folgenden Aufruf verwendet wird. */
-      revalidate: 10,
+      revalidate: 600,
     },
   });
 
