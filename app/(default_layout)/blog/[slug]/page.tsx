@@ -89,3 +89,19 @@ export async function generateMetadata({
     title: post.title.rendered,
   };
 }
+
+/* Mit dieser Funktion können alle Werte von slug, die aktuell bekannt sind,
+schon vorab an Next mitgeteilt werden, so dass die Seiten für diese Slugs
+schon beim build erzeugt werden können, und nicht dynamisch beim ersten Aufrufen
+des Slugs (mit Wartezeit) erzeugt werden müssen.
+https://beta.nextjs.org/docs/api-reference/generate-static-params
+*/
+export async function generateStaticParams() {
+  const response = await fetch(`${WP_REST_BASE}/posts`);
+
+  const posts = (await response.json()) as BlogPostRest[];
+
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
