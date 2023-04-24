@@ -1,102 +1,35 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from './page.module.css'
+import dynamic from 'next/dynamic';
 
-const inter = Inter({ subsets: ['latin'] })
+import Client from '@/components/Client';
+import Server from '@/components/Server';
+
+/* dynamic ist die Next-Version von React.lazy, damit wird der JS-Code
+für die Komponente erst dann geladen, wenn diese tatsächlich dargestellt wird,
+was z.B. sinnvoll ist, wenn eine größere Komponente nur manchmal
+nach einer User-Aktion angezeigt wird. Das allein verhindert aber NICHT, 
+dass das HTML schon auf dem Server gerendert wird. Wenn man das verhindern
+möchte, weil der Code nur im Browser funktioniert (z.B. auf window oder document
+zugreift), muss man zusätzlich die ssr-Option (Server-Side-Rendering) auf false setzen. */
+const ClientOnly = dynamic(() => import('@/components/ClientOnly'), {
+  ssr: false,
+});
+
+export const metadata = {
+  title: 'Willkommen!',
+};
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+    <main>
+      <h1>Next</h1>
+      {/* Wenn man Server-Komponenten in Client-Komponenten darstellen möchte,
+ohne dass diese selbst zu Client-Komponenten werden, muss man diese
+entweder als children oder über props in die Client-Komponente
+geben. */}
+      <Client component={<Server />}>
+        <Server />
+      </Client>
+      <ClientOnly />
     </main>
-  )
+  );
 }
